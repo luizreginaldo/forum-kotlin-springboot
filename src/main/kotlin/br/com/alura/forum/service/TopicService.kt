@@ -1,13 +1,14 @@
 package br.com.alura.forum.service
 
-import br.com.alura.forum.model.Course
+import br.com.alura.forum.dto.NewTopicDto
 import br.com.alura.forum.model.Topic
-import br.com.alura.forum.model.User
 import org.springframework.stereotype.Service
 
 @Service
 class TopicService(
-    private var topics: List<Topic> = listOf()
+    private var topics: MutableList<Topic> = mutableListOf(),
+    private val courseService: CourseService,
+    private val userService: UserService,
 ) {
 
     fun list(): List<Topic> {
@@ -20,8 +21,14 @@ class TopicService(
         }.findFirst().get()
     }
 
-    fun create(topic: Topic) {
-        topics.plus(topic)
+    fun create(newTopicDto: NewTopicDto) {
+        topics.add(Topic(
+            id = (topics.size + 1).toLong(),
+            title = newTopicDto.title,
+            message = newTopicDto.message,
+            course = courseService.findById(newTopicDto.courseId),
+            author = userService.findById(newTopicDto.authorId)
+        ))
     }
 
 }

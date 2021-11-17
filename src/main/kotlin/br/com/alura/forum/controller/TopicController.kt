@@ -1,5 +1,6 @@
 package br.com.alura.forum.controller
 
+import br.com.alura.forum.dto.NewTopicDto
 import br.com.alura.forum.model.Topic
 import br.com.alura.forum.service.TopicService
 import org.springframework.web.bind.annotation.*
@@ -11,7 +12,7 @@ class TopicController(
 ) {
 
     @GetMapping
-    fun list(): List<Topic> {
+    fun list() : List<Topic> {
         return service.list()
     }
 
@@ -21,8 +22,8 @@ class TopicController(
     }
 
     @PostMapping
-    fun create(@RequestBody topic: Topic) {
-        service.create(topic)
+    fun create(@RequestBody newTopicDto: NewTopicDto) {
+        service.create(newTopicDto)
     }
 
 }
