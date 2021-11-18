@@ -2,6 +2,8 @@ package br.com.alura.forum.service
 
 import br.com.alura.forum.dto.TopicForm
 import br.com.alura.forum.dto.TopicView
+import br.com.alura.forum.mapper.TopicFormMapper
+import br.com.alura.forum.mapper.TopicViewMapper
 import br.com.alura.forum.model.Topic
 import org.springframework.stereotype.Service
 import kotlin.streams.toList
@@ -9,19 +11,13 @@ import kotlin.streams.toList
 @Service
 class TopicService(
     private var topics: MutableList<Topic> = mutableListOf(),
-    private val courseService: CourseService,
-    private val userService: UserService,
+    private val topicViewMapper: TopicViewMapper,
+    private val topicFormMapper: TopicFormMapper,
 ) {
 
     fun list(): List<TopicView> {
         return topics.stream().map { topic ->
-            TopicView(
-                id = topic.id,
-                title = topic.title,
-                message = topic.message,
-                createAt = topic.createdAt,
-                status = topic.status
-            )
+            topicViewMapper.map(topic)
         }.toList()
     }
 
@@ -30,23 +26,13 @@ class TopicService(
             topic.id == id
         }.findFirst().get()
 
-        return TopicView(
-            id = topic.id,
-            title = topic.title,
-            message = topic.message,
-            createAt = topic.createdAt,
-            status = topic.status
-        )
+        return topicViewMapper.map(topic)
     }
 
     fun create(topicForm: TopicForm) {
-        topics.add(Topic(
-            id = (topics.size + 1).toLong(),
-            title = topicForm.title,
-            message = topicForm.message,
-            course = courseService.findById(topicForm.courseId),
-            author = userService.findById(topicForm.authorId)
-        ))
+        topics.add(topicFormMapper.map(topicForm).apply {
+            this.id = (topics.size + 1).toLong()
+        })
     }
 
 }
