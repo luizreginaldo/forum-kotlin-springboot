@@ -1,8 +1,10 @@
 package br.com.alura.forum.service
 
-import br.com.alura.forum.dto.NewTopicDto
+import br.com.alura.forum.dto.TopicForm
+import br.com.alura.forum.dto.TopicView
 import br.com.alura.forum.model.Topic
 import org.springframework.stereotype.Service
+import kotlin.streams.toList
 
 @Service
 class TopicService(
@@ -11,23 +13,39 @@ class TopicService(
     private val userService: UserService,
 ) {
 
-    fun list(): List<Topic> {
-        return topics
+    fun list(): List<TopicView> {
+        return topics.stream().map { topic ->
+            TopicView(
+                id = topic.id,
+                title = topic.title,
+                message = topic.message,
+                createAt = topic.createdAt,
+                status = topic.status
+            )
+        }.toList()
     }
 
-    fun findById(id: Long): Topic {
-        return topics.stream().filter { topic ->
+    fun findById(id: Long): TopicView {
+        val topic = topics.stream().filter { topic ->
             topic.id == id
         }.findFirst().get()
+
+        return TopicView(
+            id = topic.id,
+            title = topic.title,
+            message = topic.message,
+            createAt = topic.createdAt,
+            status = topic.status
+        )
     }
 
-    fun create(newTopicDto: NewTopicDto) {
+    fun create(topicForm: TopicForm) {
         topics.add(Topic(
             id = (topics.size + 1).toLong(),
-            title = newTopicDto.title,
-            message = newTopicDto.message,
-            course = courseService.findById(newTopicDto.courseId),
-            author = userService.findById(newTopicDto.authorId)
+            title = topicForm.title,
+            message = topicForm.message,
+            course = courseService.findById(topicForm.courseId),
+            author = userService.findById(topicForm.authorId)
         ))
     }
 

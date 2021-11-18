@@ -27,4 +27,8 @@ class UserService(
             user.id == id
         }.findFirst().get()
     }
+
+    fun create() {
+        
+    }
 }
