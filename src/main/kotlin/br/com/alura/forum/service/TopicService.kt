@@ -1,6 +1,7 @@
 package br.com.alura.forum.service
 
-import br.com.alura.forum.dto.TopicForm
+import br.com.alura.forum.dto.TopicCreateForm
+import br.com.alura.forum.dto.TopicUpdateForm
 import br.com.alura.forum.dto.TopicView
 import br.com.alura.forum.mapper.TopicFormMapper
 import br.com.alura.forum.mapper.TopicViewMapper
@@ -29,10 +30,19 @@ class TopicService(
         return topicViewMapper.map(topic)
     }
 
-    fun create(topicForm: TopicForm) {
-        topics.add(topicFormMapper.map(topicForm).apply {
+    fun create(form: TopicCreateForm) {
+        topics.add(topicFormMapper.map(form).apply {
             this.id = (topics.size + 1).toLong()
         })
+    }
+
+    fun update(form: TopicUpdateForm) {
+        topics.stream().filter { topic ->
+            topic.id == form.id
+        }.findFirst().get().apply {
+            this.title = form.title
+            this.message = form.message
+        }
     }
 
 }

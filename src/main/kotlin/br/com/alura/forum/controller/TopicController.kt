@@ -1,8 +1,8 @@
 package br.com.alura.forum.controller
 
-import br.com.alura.forum.dto.TopicForm
+import br.com.alura.forum.dto.TopicCreateForm
+import br.com.alura.forum.dto.TopicUpdateForm
 import br.com.alura.forum.dto.TopicView
-import br.com.alura.forum.model.Topic
 import br.com.alura.forum.service.TopicService
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -24,8 +24,13 @@ class TopicController(
     }
 
     @PostMapping
-    fun create(@RequestBody @Valid topicForm: TopicForm) {
-        service.create(topicForm)
+    fun create(@RequestBody @Valid form: TopicCreateForm) {
+        service.create(form)
+    }
+
+    @PutMapping
+    fun update(@RequestBody @Valid form: TopicUpdateForm) {
+        service.update(form)
     }
 
 }
