@@ -5,6 +5,7 @@ import br.com.alura.forum.dto.TopicView
 import br.com.alura.forum.model.Topic
 import br.com.alura.forum.service.TopicService
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/topics")
@@ -23,7 +24,7 @@ class TopicController(
     }
 
     @PostMapping
-    fun create(@RequestBody topicForm: TopicForm) {
+    fun create(@RequestBody @Valid topicForm: TopicForm) {
         service.create(topicForm)
     }
 
