@@ -30,19 +30,25 @@ class TopicService(
         return topicViewMapper.map(topic)
     }
 
-    fun create(form: TopicCreateForm) {
-        topics.add(topicFormMapper.map(form).apply {
+    fun create(form: TopicCreateForm) : TopicView {
+        val topic = topicFormMapper.map(form).apply {
             this.id = (topics.size + 1).toLong()
-        })
+        }
+
+        topics.add(topic)
+
+        return topicViewMapper.map(topic)
     }
 
-    fun update(form: TopicUpdateForm) {
-        topics.stream().filter { topic ->
+    fun update(form: TopicUpdateForm) : TopicView {
+        val topic = topics.stream().filter { topic ->
             topic.id == form.id
         }.findFirst().get().apply {
             this.title = form.title
             this.message = form.message
         }
+
+        return topicViewMapper.map(topic)
     }
 
     fun delete(id: Long) {
