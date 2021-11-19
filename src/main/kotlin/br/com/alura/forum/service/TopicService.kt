@@ -45,4 +45,10 @@ class TopicService(
         }
     }
 
+    fun delete(id: Long) {
+        topics.remove(topics.stream().filter { topic ->
+            topic.id == id
+        }.findFirst().get())
+    }
+
 }

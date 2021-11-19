@@ -33,4 +33,9 @@ class TopicController(
         service.update(form)
     }
 
+    @DeleteMapping("/{id}")
+    fun delete(@PathVariable id: Long) {
+        service.delete(id)
+    }
+
 }
