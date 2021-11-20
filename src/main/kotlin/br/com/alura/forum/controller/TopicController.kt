@@ -4,6 +4,9 @@ import br.com.alura.forum.dto.TopicCreateForm
 import br.com.alura.forum.dto.TopicUpdateForm
 import br.com.alura.forum.dto.TopicView
 import br.com.alura.forum.service.TopicService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -18,8 +21,11 @@ class TopicController(
 ) {
 
     @GetMapping
-    fun list(@RequestParam(required = false) courseName: String?) : List<TopicView> {
-        return service.list(courseName)
+    fun list(
+        @RequestParam(required = false) courseName: String?,
+        @PageableDefault(size = 5) pagination : Pageable
+    ) : Page<TopicView> {
+        return service.list(courseName, pagination)
     }
 
     @GetMapping("/{id}")

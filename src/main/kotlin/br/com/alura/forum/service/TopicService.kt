@@ -7,7 +7,10 @@ import br.com.alura.forum.exception.NotFoundException
 import br.com.alura.forum.mapper.TopicFormMapper
 import br.com.alura.forum.mapper.TopicViewMapper
 import br.com.alura.forum.repository.TopicRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.util.stream.Collectors
 import kotlin.streams.toList
 
 @Service
@@ -18,15 +21,15 @@ class TopicService(
     private val notFoundMessage: String = "Topic not found!"
 ) {
 
-    fun list(courseName: String?): List<TopicView> {
+    fun list(courseName: String?, pagination: Pageable): Page<TopicView> {
         val topics = if(courseName == null) {
-            repository.findAll()
+            repository.findAll(pagination)
         } else {
-            repository.findByCourseName(courseName)
+            repository.findByCourseName(courseName, pagination)
         }
-        return topics.stream().map { topic ->
+        return topics.map { topic ->
             topicViewMapper.map(topic)
-        }.toList()
+        }
     }
 
     fun findById(id: Long): TopicView {
