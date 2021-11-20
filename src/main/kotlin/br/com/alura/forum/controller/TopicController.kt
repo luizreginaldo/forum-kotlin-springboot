@@ -18,8 +18,8 @@ class TopicController(
 ) {
 
     @GetMapping
-    fun list() : List<TopicView> {
-        return service.list()
+    fun list(@RequestParam(required = false) courseName: String?) : List<TopicView> {
+        return service.list(courseName)
     }
 
     @GetMapping("/{id}")
