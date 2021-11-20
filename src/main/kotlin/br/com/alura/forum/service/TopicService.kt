@@ -6,28 +6,26 @@ import br.com.alura.forum.dto.TopicView
 import br.com.alura.forum.exception.NotFoundException
 import br.com.alura.forum.mapper.TopicFormMapper
 import br.com.alura.forum.mapper.TopicViewMapper
-import br.com.alura.forum.model.Topic
+import br.com.alura.forum.repository.TopicRepository
 import org.springframework.stereotype.Service
 import kotlin.streams.toList
 
 @Service
 class TopicService(
-    private var topics: MutableList<Topic> = mutableListOf(),
+    private val repository: TopicRepository,
     private val topicViewMapper: TopicViewMapper,
     private val topicFormMapper: TopicFormMapper,
     private val notFoundMessage: String = "Topic not found!"
 ) {
 
     fun list(): List<TopicView> {
-        return topics.stream().map { topic ->
+        return repository.findAll().stream().map { topic ->
             topicViewMapper.map(topic)
         }.toList()
     }
 
     fun findById(id: Long): TopicView {
-        val topic = topics.stream().filter { topic ->
-            topic.id == id
-        }.findFirst().orElseThrow{
+        val topic = repository.findById(id).orElseThrow{
             NotFoundException(notFoundMessage)
         }
 
@@ -35,19 +33,15 @@ class TopicService(
     }
 
     fun create(form: TopicCreateForm) : TopicView {
-        val topic = topicFormMapper.map(form).apply {
-            this.id = (topics.size + 1).toLong()
-        }
+        val topic = topicFormMapper.map(form)
 
-        topics.add(topic)
+        repository.save(topic)
 
         return topicViewMapper.map(topic)
     }
 
     fun update(form: TopicUpdateForm) : TopicView {
-        val topic = topics.stream().filter { topic ->
-            topic.id == form.id
-        }.findFirst().orElseThrow{
+        val topic = repository.findById(form.id).orElseThrow{
             NotFoundException(notFoundMessage)
         }.apply {
             this.title = form.title
@@ -58,11 +52,7 @@ class TopicService(
     }
 
     fun delete(id: Long) {
-        topics.remove(topics.stream().filter { topic ->
-            topic.id == id
-        }.findFirst().orElseThrow{
-            NotFoundException(notFoundMessage)
-        })
+        repository.deleteById(id)
     }
 
 }
