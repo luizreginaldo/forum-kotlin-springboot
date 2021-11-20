@@ -1,0 +1,8 @@
+CREATE TABLE user(
+    id bigint not null,
+    name varchar(50) not null,
+    email varchar(50) not null,
+    primary key(id)
+);
+
+INSERT INTO user VALUES(1, 'Luiz Reginaldo', 'contato@luizreginaldo.com');
