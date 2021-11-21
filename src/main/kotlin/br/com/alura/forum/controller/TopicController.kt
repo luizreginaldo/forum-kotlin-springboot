@@ -4,6 +4,7 @@ import br.com.alura.forum.dto.TopicCreateForm
 import br.com.alura.forum.dto.TopicUpdateForm
 import br.com.alura.forum.dto.TopicView
 import br.com.alura.forum.service.TopicService
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -22,6 +23,7 @@ class TopicController(
 ) {
 
     @GetMapping
+    @Cacheable("topicList")
     fun list(
         @RequestParam(required = false) courseName: String?,
         @PageableDefault(size = 5, sort = ["createdAt"], direction = Sort.Direction.DESC) pagination : Pageable
