@@ -1,5 +1,6 @@
 package br.com.alura.forum.service
 
+import br.com.alura.forum.dto.TopicByCategoryDto
 import br.com.alura.forum.dto.TopicCreateForm
 import br.com.alura.forum.dto.TopicUpdateForm
 import br.com.alura.forum.dto.TopicView
@@ -61,6 +62,10 @@ class TopicService(
 
     fun delete(id: Long) {
         repository.deleteById(id)
+    }
+
+    fun report() : List<TopicByCategoryDto> {
+        return repository.report()
     }
 
 }
