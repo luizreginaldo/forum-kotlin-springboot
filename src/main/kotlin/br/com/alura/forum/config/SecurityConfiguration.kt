@@ -19,6 +19,7 @@ class SecurityConfiguration(
     override fun configure(http: HttpSecurity?) {
         http?.
             authorizeRequests()?.
+            antMatchers("/topics")?.hasAuthority("ONLY_READ")?.
             anyRequest()?.
             authenticated()?.
             and()?.
