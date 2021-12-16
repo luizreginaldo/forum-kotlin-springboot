@@ -26,7 +26,7 @@ class JWTUtil {
 
     fun isValid(jwt: String?): Boolean {
         return try {
-            Jwts.parser().setSigningKey(secret.toByteArray()).parseClaimsJwt(jwt)
+            Jwts.parser().setSigningKey(secret.toByteArray()).parseClaimsJws(jwt)
             true
         } catch (e: IllegalArgumentException) {
             false
@@ -34,7 +34,7 @@ class JWTUtil {
     }
 
     fun getAuthentication(jwt: String?) : Authentication {
-        val username =  Jwts.parser().setSigningKey(secret.toByteArray()).parseClaimsJwt(jwt).body.subject
+        val username =  Jwts.parser().setSigningKey(secret.toByteArray()).parseClaimsJws(jwt).body.subject
         return UsernamePasswordAuthenticationToken(username, null, null)
     }
 }

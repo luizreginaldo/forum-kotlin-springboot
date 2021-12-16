@@ -13,7 +13,6 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.web.filter.OncePerRequestFilter
 
 @Configuration
 @EnableWebSecurity
@@ -24,15 +23,19 @@ class SecurityConfiguration(
 
     override fun configure(http: HttpSecurity?) {
         http?.
+            csrf()?.disable()?.
             authorizeRequests()?.
-//            antMatchers("/topics")?.hasAuthority("ONLY_READ")?.
+//            antMatchers("/topics")?.hasAuthority("READ_WRITE")?.
             antMatchers(HttpMethod.POST,"/login")?.permitAll()?.
             anyRequest()?.
             authenticated()?.
             and()
-            http?.addFilterBefore(JWTLoginFilter(authManager = authenticationManager(), jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter().javaClass)
-            http?.addFilterBefore(JWTAuthenticationFilter(jwtUtil = jwtUtil), OncePerRequestFilter::class.java)
-            http?.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http?.
+            addFilterBefore(JWTLoginFilter(authManager = authenticationManager(), jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter().javaClass)
+        http?.
+            addFilterBefore(JWTAuthenticationFilter(jwtUtil = jwtUtil), UsernamePasswordAuthenticationFilter().javaClass)
+        http?.
+            sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }
 
     override fun configure(auth: AuthenticationManagerBuilder?) {
